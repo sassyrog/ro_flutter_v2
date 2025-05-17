@@ -1,0 +1,40 @@
+{
+  "name": "ro Flutter Development",
+  "dockerComposeFile": [
+    "../docker-compose.yml",
+    "docker-compose.yml"
+  ],
+  "service": "flutter-dev",
+  "workspaceFolder": "/workspace",
+  "postCreateCommand": "flutter pub get",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dart-code.dart-code",
+        "dart-code.flutter",
+        "streetsidesoftware.code-spell-checker",
+        "Dart-Code.flutter"
+      ],
+      "settings": {
+        "dart.flutterSdkPath": "/usr/bin/flutter",
+        "dart.sdkPath": "/usr/bin/flutter/bin/cache/dart-sdk",
+        "dart.analysisExcludedFolders": [
+          "/usr/bin/flutter/.pub-cache",
+          "/usr/bin/flutter/bin/cache"
+        ],
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll": "always"
+        },
+        "files.watcherExclude": {
+          "**/.dart_tool/**": true,
+          "**/build/**": true
+        },
+        "search.exclude": {
+          "**/.dart_tool": true,
+          "**/build": true
+        }
+      }
+    }
+  }
+}
