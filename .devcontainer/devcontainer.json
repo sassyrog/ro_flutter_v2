@@ -11,9 +11,7 @@
     "vscode": {
       "extensions": [
         "dart-code.dart-code",
-        "dart-code.flutter",
-        "streetsidesoftware.code-spell-checker",
-        "Dart-Code.flutter"
+        "dart-code.flutter"
       ],
       "settings": {
         "dart.flutterSdkPath": "/usr/bin/flutter",

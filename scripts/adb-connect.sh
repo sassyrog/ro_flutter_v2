@@ -1,49 +1,64 @@
-#!/bin/bash
+#!/bin/sh
+set -eu pipefail
 
-# Kill any existing ADB servers
-adb kill-server >/dev/null 2>&1
-pkill -9 adb >/dev/null 2>&1
-
-# Start ADB server in no-daemon mode and log output
-echo "Starting ADB server..."
-adb -a -P 5037 nodaemon server > adb.log 2>&1 &
-ADB_PID=$!
-
-# Wait for server to initialize
-sleep 3
-
-
-echo "Connecting to BlueStacks..."
-max_retries=3
-retry_count=0
+# Configuration
 ADB_PORT=${ADB_PORT:-5555}
+ADB_SERVER_PORT=${ADB_SERVER_PORT:-5037}
+MAX_RETRIES=5
+RETRY_DELAY=2
 
-while [ $retry_count -lt $max_retries ]; do
-    adb connect host.docker.internal:$ADB_PORT
-    if adb devices | grep -q "host.docker.internal:$ADB_PORT"; then
-        echo "Successfully connected to BlueStacks"
-        break
-    else
-        retry_count=$((retry_count+1))
-        echo "Connection failed, retry $retry_count/$max_retries..."
-        sleep 3
-    fi
-done
+# Cleanup function
+cleanup() {
+    echo "Cleaning up ADB processes..."
+    pkill -9 adb 2>/dev/null || true
+    adb kill-server 2>/dev/null || true
+}
 
-# Verify connection
-echo -e "\nConnected devices:"
-adb devices -l
+# Start ADB server
+start_adb_server() {
+    echo "Starting ADB server on port $ADB_SERVER_PORT..."
+    adb -a -P "$ADB_SERVER_PORT" nodaemon server > adb.log 2>&1 &
+    ADB_PID=$!
+    sleep 2  # Wait for server initialization
+}
 
-# Check if connection succeeded
-if ! adb devices | grep -q "host.docker.internal:$ADB_PORT"; then
-    echo -e "\nERROR: Failed to connect to BlueStacks after $max_retries attempts"
-    echo "ADB server log:"
+# Connection function
+connect_to_bluestacks() {
+    echo "Attempting to connect to BlueStacks..."
+    
+    i=1
+    while [ "$i" -le "$MAX_RETRIES" ]; do
+        if adb connect "host.docker.internal:$ADB_PORT" 2>/dev/null; then
+            if adb devices | grep -q "host.docker.internal:$ADB_PORT.*device$"; then
+                echo "Successfully connected to BlueStacks"
+                return 0
+            fi
+        fi
+        
+        echo "Connection attempt $i/$MAX_RETRIES failed, retrying in $RETRY_DELAY seconds..."
+        i=$((i + 1))
+        sleep "$RETRY_DELAY"
+    done
+    
+    return 1
+}
+
+# Main execution
+cleanup
+start_adb_server
+
+if connect_to_bluestacks; then
+    echo -e "\nConnected devices:"
+    adb devices -l
+    
+    echo "Setting up port forwarding..."
+    adb forward tcp:8081 tcp:8081
+    
+    echo "ADB connection established successfully"
+    exit 0
+else
+    echo -e "\nERROR: Failed to connect after $MAX_RETRIES attempts"
+    echo "ADB server logs:"
     cat adb.log
-    kill $ADB_PID
     exit 1
 fi
-
-# Set up port forwarding for Flutter web debugging
-adb forward tcp:8081 tcp:8081
-
-exit 0
