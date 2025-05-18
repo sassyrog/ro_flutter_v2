@@ -87,7 +87,7 @@ class MyApp extends StatelessWidget {
       valueListenable: isDarkModeNotifier,
       builder: (context, isDarkModeValue, child) {
         return MaterialApp(
-          title: 'Ro Flutter',
+          title: KConstants.appName,
           debugShowCheckedModeBanner: false,
           theme:
               isDarkModeValue

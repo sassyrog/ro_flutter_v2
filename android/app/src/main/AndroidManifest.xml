@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="ro_flutter"
+        android:label="Pegaplay"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
