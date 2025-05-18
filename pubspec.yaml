@@ -29,6 +29,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_native_splash: ^2.4.6
+  flutter_launcher_icons: ^0.14.3
 
 flutter_gen:
   line_length: 120
@@ -62,6 +63,21 @@ flutter_native_splash:
     image_dark: assets/images/logo_splash.png
     icon_background_color_dark: "#1a1423"
   fullscreen: true
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: assets/images/launch_logo.png
+  remove_alpha_ios: true
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: assets/images/launch_logo.png
+  min_sdk_android: 21
+  web:
+    generate: true
+    image_path: "assets/images/launch_logo.png"
+    background_color: "#ffffff"
+    theme_color: "#b75d69"
+
 
 flutter:
   uses-material-design: true

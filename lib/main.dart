@@ -1,17 +1,32 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ro_flutter/data/constants.dart';
 import 'package:ro_flutter/data/notifiers.dart';
+import 'package:ro_flutter/gen/assets.gen.dart';
 import 'package:ro_flutter/gen/colors.gen.dart';
 import 'package:ro_flutter/views/home_page.dart';
 import 'package:ro_flutter/views/login_view.dart';
 import 'package:ro_flutter/views/splash_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeTheme();
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.black, // Match splash background
+    ),
+  );
+
+  await Future.wait([
+    initializeTheme(),
+    AssetPrecacher.precacheAll(),
+    // Add other initializations here if needed
+  ]);
+
   runApp(const MyApp());
 }
 
@@ -33,6 +48,35 @@ Future<void> initializeTheme() async {
   }
 }
 
+class AssetPrecacher {
+  static Future<void> precacheAll() async {
+    try {
+      await Future.wait([_precacheImages(), _precacheLotties()]);
+    } catch (e) {
+      debugPrint('Precaching error: $e');
+    }
+  }
+
+  static Future<void> _precacheImages() async {
+    final images = [Assets.images.logoText];
+
+    await Future.wait(
+      images.map((image) async {
+        final loader = SvgAssetLoader(image.path);
+        await (svg.cache.putIfAbsent(
+          loader.cacheKey(null),
+          () => loader.loadBytes(null),
+        ));
+      }),
+    );
+  }
+
+  static Future<void> _precacheLotties() async {
+    final lotties = [Assets.lotties.logoSpin];
+    await Future.wait(lotties.map((lottie) => rootBundle.load(lottie.path)));
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -51,9 +95,9 @@ class MyApp extends StatelessWidget {
                   : _buildLightTheme(context),
           darkTheme: _buildDarkTheme(context),
           themeMode: isDarkModeValue ? ThemeMode.dark : ThemeMode.light,
+          home: const SplashScreen(),
           initialRoute: '/', // Initial route is splash
           routes: {
-            '/': (context) => const SplashScreen(),
             '/home': (context) => const HomePage(),
             '/login': (context) => const LoginView(),
           },

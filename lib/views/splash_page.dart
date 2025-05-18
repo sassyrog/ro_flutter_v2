@@ -13,58 +13,46 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  bool _isLoading = true;
-
   @override
   void initState() {
     super.initState();
-    _loadInitialData();
+    _navigateAfterDelay();
   }
 
-  Future<void> _loadInitialData() async {
-    _initTheme();
-    await Future.delayed(const Duration(seconds: 10));
+  Future<void> _navigateAfterDelay() async {
+    // Minimum splash duration (adjust as needed)
+    await Future.delayed(const Duration(milliseconds: 1500));
+
     if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
+      Navigator.pushReplacementNamed(context, '/login');
     }
-  }
-
-  void _initTheme() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final bool isDarkMode = prefs.getBool(KConstants.themeModeKey) ?? false;
-    isDarkModeNotifier.value = isDarkMode;
   }
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading ? _buildSpashScreen() : _buildMainApp();
-  }
-
-  Widget _buildSpashScreen() {
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Pre-cached Lottie will animate smoothly
             ColorFiltered(
               colorFilter: ColorFilter.mode(
                 AppColors.primary,
                 BlendMode.srcATop,
               ),
               child: Assets.lotties.logoSpin.lottie(
-                width: 200,
-                height: 200,
+                width: 175,
+                height: 175,
                 fit: BoxFit.cover,
-                repeat: true,
               ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
+            // Pre-cached SVG
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Assets.images.logoText.svg(
-                width: 200,
+                width: 175,
                 fit: BoxFit.fitWidth,
               ),
             ),
@@ -72,13 +60,5 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       ),
     );
-  }
-
-  Widget _buildMainApp() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.pushReplacementNamed(context, '/login');
-    });
-
-    return Container();
   }
 }
