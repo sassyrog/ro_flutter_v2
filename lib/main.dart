@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ro_flutter/data/notifiers.dart';
+import 'package:ro_flutter/gen/colors.gen.dart';
 import 'package:ro_flutter/views/home_page.dart';
 import 'package:ro_flutter/views/login_view.dart';
 import 'package:ro_flutter/views/splash_page.dart';
@@ -43,9 +44,9 @@ class MyApp extends StatelessWidget {
 
   ThemeData _buildLightTheme(BuildContext context) {
     // Light theme colors
-    const primaryColor = Color(0xFF488286);
-    const secondaryColor = Color(0xFFb7d5d4);
-    const tertiaryColor = Color(0xFF071E1E);
+    const primaryColor = AppColors.primary;
+    const secondaryColor = AppColors.secondary;
+    const tertiaryColor = AppColors.tertiary;
     const surfaceColor = Colors.white;
     const errorColor = Color(0xFFB00020);
 
@@ -67,12 +68,12 @@ class MyApp extends StatelessWidget {
         error: errorColor,
         onPrimary: Colors.white,
         onSecondary: tertiaryColor,
-        onSurface: tertiaryColor,
+        onSurface: AppColors.primary2,
         onError: Colors.white,
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: surfaceColor,
-        foregroundColor: Colors.black,
+        foregroundColor: AppColors.tertiary,
       ),
       drawerTheme: DrawerThemeData(backgroundColor: secondaryColor),
       cardTheme: const CardTheme(
@@ -89,9 +90,9 @@ class MyApp extends StatelessWidget {
 
   ThemeData _buildDarkTheme(BuildContext context) {
     // Dark theme colors
-    const primaryColor = Color(0xFF488286);
-    const secondaryColor = Color(0xFFb7d5d4);
-    const surfaceColor = Color(0xFF071E1E);
+    const primaryColor = AppColors.primary;
+    const secondaryColor = AppColors.secondary;
+    const surfaceColor = AppColors.primaryDark;
     const errorColor = Color(0xFFB00020);
 
     return ThemeData(

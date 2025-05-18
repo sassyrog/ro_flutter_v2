@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ro_flutter/data/constants.dart';
 import 'package:ro_flutter/data/notifiers.dart';
+import 'package:ro_flutter/gen/assets.gen.dart';
+import 'package:ro_flutter/gen/colors.gen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -41,7 +43,19 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Widget _buildSpashScreen() {
-    return Scaffold(body: Center(child: CircularProgressIndicator()));
+    return Scaffold(
+      body: Center(
+        child: ColorFiltered(
+          colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcATop),
+          child: Assets.lotties.logoSpin.lottie(
+            width: 200,
+            height: 200,
+            fit: BoxFit.cover,
+            repeat: true,
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildMainApp() {

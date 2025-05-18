@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ro_flutter/gen/assets.gen.dart';
+import 'package:ro_flutter/gen/colors.gen.dart';
 import 'package:ro_flutter/widgets/drawer_widget.dart';
 import 'package:ro_flutter/widgets/form/form_input_widget.dart';
 
@@ -8,7 +10,13 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login'), centerTitle: true),
+      appBar: AppBar(
+        title: ColorFiltered(
+          colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcATop),
+          child: Assets.images.logo.svg(width: 60, height: 60),
+        ),
+        centerTitle: true,
+      ),
       drawer: AppDrawer(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
