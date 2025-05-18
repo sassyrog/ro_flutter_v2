@@ -56,4 +56,5 @@ RUN git config --global --add safe.directory '*' && \
     echo 'source <(flutter bash-completion)' >> ~/.bashrc && \
     sdkmanager --version && \
     java --version && \
+    dart --disable-analytics && \
     flutter config --no-analytics

@@ -6,12 +6,14 @@
   ],
   "service": "flutter-dev",
   "workspaceFolder": "/workspace",
-  "postCreateCommand": "flutter pub get",
+  "postCreateCommand": "sudo chown -R vscode:vscode /workspace && flutter pub get",
   "customizations": {
     "vscode": {
       "extensions": [
         "dart-code.dart-code",
-        "dart-code.flutter"
+        "dart-code.flutter",
+        "seatonjiang.gitmoji-vscode",
+        "mikestead.dotenv"
       ],
       "settings": {
         "dart.flutterSdkPath": "/usr/bin/flutter",
