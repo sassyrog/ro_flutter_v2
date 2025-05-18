@@ -1,0 +1,15 @@
+{
+	"files.exclude": {
+		// flutter/dart exludes
+		"**/build": true,
+		"**/.dart_tool": true,
+		"**/.packages": true,
+		"**/.pub-cache": true,
+		"**/.pub": true,
+		"**/.idea": true,
+		"**/.metadata": true,
+		"**/.github": true,
+		".flutter-plugins": true,
+		".flutter-plugins-dependencies": true,
+	}
+}

@@ -1,0 +1,50 @@
+services:
+  flutter-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/workspace:cached
+      - ~/.ssh:/home/vscode/.ssh:ro
+      - flutter-pub-cache:/home/vscode/.pub-cache
+      - flutter-cache:/usr/bin/flutter/.pub-cache
+      - android-gradle-cache:/home/vscode/.gradle
+      - android-sdk-cache:/opt/android-sdk-linux
+      # X11 socket for GUI applications
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      # USB device access (for when devices are forwarded to WSL)
+      - /dev/bus/usb:/dev/bus/usb
+    environment:
+      - DISPLAY=${DISPLAY}
+      - ANDROID_SDK_ROOT=/opt/android-sdk-linux
+      - ANDROID_HOME=/opt/android-sdk-linux
+      # ADB configuration for Windows host connectivity
+      - ANDROID_ADB_SERVER_PORT=5037
+      - ADB_VENDOR_KEYS=/opt/android-sdk-linux/.android/adbkey
+    network_mode: "bridge"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "5037:5037" # ADB server
+      - "5555-5585:5555-5585" # Emulator/device ports
+      - "8000-8100:8000-8100" # Flutter development ports
+    working_dir: /workspace
+    command: sleep infinity
+    user: vscode
+    tty: true
+    stdin_open: true
+    privileged: true # Required for USB device access
+    deploy:
+      resources:
+        limits:
+          memory: 3G
+          cpus: '2'
+        reservations:
+          memory: 2G
+          cpus: '1'
+
+volumes:
+  flutter-pub-cache:
+  flutter-cache:
+  android-gradle-cache:
+  android-sdk-cache:
