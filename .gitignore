@@ -52,5 +52,14 @@ android/app/src/main/res/values/colors.xml
 android/app/src/main/res/values/styles.xml
 android/app/src/main/res/values-night/colors.xml
 android/app/src/main/res/values-night/styles.xml
-ios/Runner/Assets.xcassets/LaunchImage.imageset/
-ios/Runner/LaunchScreen.storyboard
+
+
+# FlutterFire CLI generated files
+/firebase_options.dart
+/android/app/google-services.json
+/ios/Runner/GoogleService-Info.plist
+/ios/firebase_app_id_file.json
+/web/firebase-config.json
+/macos/firebase_app_id_file.json
+/lib/firebase_options.dart
+

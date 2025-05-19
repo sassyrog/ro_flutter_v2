@@ -13,20 +13,80 @@ import 'package:flutter_svg/flutter_svg.dart' as _svg;
 import 'package:lottie/lottie.dart' as _lottie;
 import 'package:vector_graphics/vector_graphics.dart' as _vg;
 
+class $AssetsIconsGen {
+  const $AssetsIconsGen();
+
+  /// File path: assets/icons/apple_music.svg
+  SvgGenImage get appleMusic => const SvgGenImage('assets/icons/apple_music.svg');
+
+  /// File path: assets/icons/apple_music_blk.svg
+  SvgGenImage get appleMusicBlk => const SvgGenImage('assets/icons/apple_music_blk.svg');
+
+  /// File path: assets/icons/apple_music_wht.svg
+  SvgGenImage get appleMusicWht => const SvgGenImage('assets/icons/apple_music_wht.svg');
+
+  /// File path: assets/icons/google_dark.svg
+  SvgGenImage get googleDark => const SvgGenImage('assets/icons/google_dark.svg');
+
+  /// File path: assets/icons/google_light.svg
+  SvgGenImage get googleLight => const SvgGenImage('assets/icons/google_light.svg');
+
+  /// File path: assets/icons/google_sq_dark.svg
+  SvgGenImage get googleSqDark => const SvgGenImage('assets/icons/google_sq_dark.svg');
+
+  /// File path: assets/icons/google_sq_light.svg
+  SvgGenImage get googleSqLight => const SvgGenImage('assets/icons/google_sq_light.svg');
+
+  /// File path: assets/icons/spotify.svg
+  SvgGenImage get spotify => const SvgGenImage('assets/icons/spotify.svg');
+
+  /// File path: assets/icons/spotify_full.svg
+  SvgGenImage get spotifyFull => const SvgGenImage('assets/icons/spotify_full.svg');
+
+  /// List of all assets
+  List<SvgGenImage> get values => [
+        appleMusic,
+        appleMusicBlk,
+        appleMusicWht,
+        googleDark,
+        googleLight,
+        googleSqDark,
+        googleSqLight,
+        spotify,
+        spotifyFull
+      ];
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/full_logo.png
+  AssetGenImage get fullLogoPng => const AssetGenImage('assets/images/full_logo.png');
+
   /// File path: assets/images/full_logo.svg
-  SvgGenImage get fullLogo => const SvgGenImage('assets/images/full_logo.svg');
+  SvgGenImage get fullLogoSvg => const SvgGenImage('assets/images/full_logo.svg');
+
+  /// File path: assets/images/launch_logo.png
+  AssetGenImage get launchLogo => const AssetGenImage('assets/images/launch_logo.png');
+
+  /// File path: assets/images/logo.png
+  AssetGenImage get logoPng => const AssetGenImage('assets/images/logo.png');
 
   /// File path: assets/images/logo.svg
-  SvgGenImage get logo => const SvgGenImage('assets/images/logo.svg');
+  SvgGenImage get logoSvg => const SvgGenImage('assets/images/logo.svg');
+
+  /// File path: assets/images/logo_splash.png
+  AssetGenImage get logoSplash => const AssetGenImage('assets/images/logo_splash.png');
+
+  /// File path: assets/images/logo_text.png
+  AssetGenImage get logoTextPng => const AssetGenImage('assets/images/logo_text.png');
 
   /// File path: assets/images/logo_text.svg
-  SvgGenImage get logoText => const SvgGenImage('assets/images/logo_text.svg');
+  SvgGenImage get logoTextSvg => const SvgGenImage('assets/images/logo_text.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [fullLogo, logo, logoText];
+  List<dynamic> get values =>
+      [fullLogoPng, fullLogoSvg, launchLogo, logoPng, logoSvg, logoSplash, logoTextPng, logoTextSvg];
 }
 
 class $AssetsLottiesGen {
@@ -45,14 +105,104 @@ class $AssetsLottiesGen {
 class Assets {
   const Assets._();
 
+  static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const $AssetsLottiesGen lotties = $AssetsLottiesGen();
 }
 
-class SvgGenImage {
-  const SvgGenImage(this._assetName, {this.size, this.flavors = const {}}) : _isVecFormat = false;
+class AssetGenImage {
+  const AssetGenImage(
+    this._assetName, {
+    this.size,
+    this.flavors = const {},
+  });
 
-  const SvgGenImage.vec(this._assetName, {this.size, this.flavors = const {}}) : _isVecFormat = true;
+  final String _assetName;
+
+  final Size? size;
+  final Set<String> flavors;
+
+  Image image({
+    Key? key,
+    AssetBundle? bundle,
+    ImageFrameBuilder? frameBuilder,
+    ImageErrorWidgetBuilder? errorBuilder,
+    String? semanticLabel,
+    bool excludeFromSemantics = false,
+    double? scale,
+    double? width,
+    double? height,
+    Color? color,
+    Animation<double>? opacity,
+    BlendMode? colorBlendMode,
+    BoxFit? fit,
+    AlignmentGeometry alignment = Alignment.center,
+    ImageRepeat repeat = ImageRepeat.noRepeat,
+    Rect? centerSlice,
+    bool matchTextDirection = false,
+    bool gaplessPlayback = true,
+    bool isAntiAlias = false,
+    String? package,
+    FilterQuality filterQuality = FilterQuality.medium,
+    int? cacheWidth,
+    int? cacheHeight,
+  }) {
+    return Image.asset(
+      _assetName,
+      key: key,
+      bundle: bundle,
+      frameBuilder: frameBuilder,
+      errorBuilder: errorBuilder,
+      semanticLabel: semanticLabel,
+      excludeFromSemantics: excludeFromSemantics,
+      scale: scale,
+      width: width,
+      height: height,
+      color: color,
+      opacity: opacity,
+      colorBlendMode: colorBlendMode,
+      fit: fit,
+      alignment: alignment,
+      repeat: repeat,
+      centerSlice: centerSlice,
+      matchTextDirection: matchTextDirection,
+      gaplessPlayback: gaplessPlayback,
+      isAntiAlias: isAntiAlias,
+      package: package,
+      filterQuality: filterQuality,
+      cacheWidth: cacheWidth,
+      cacheHeight: cacheHeight,
+    );
+  }
+
+  ImageProvider provider({
+    AssetBundle? bundle,
+    String? package,
+  }) {
+    return AssetImage(
+      _assetName,
+      bundle: bundle,
+      package: package,
+    );
+  }
+
+  String get path => _assetName;
+
+  String get keyName => _assetName;
+}
+
+class SvgGenImage {
+  const SvgGenImage(
+    this._assetName, {
+    this.size,
+    this.flavors = const {},
+  }) : _isVecFormat = false;
+
+  const SvgGenImage.vec(
+    this._assetName, {
+    this.size,
+    this.flavors = const {},
+  }) : _isVecFormat = true;
 
   final String _assetName;
   final Size? size;
@@ -81,9 +231,18 @@ class SvgGenImage {
   }) {
     final _svg.BytesLoader loader;
     if (_isVecFormat) {
-      loader = _vg.AssetBytesLoader(_assetName, assetBundle: bundle, packageName: package);
+      loader = _vg.AssetBytesLoader(
+        _assetName,
+        assetBundle: bundle,
+        packageName: package,
+      );
     } else {
-      loader = _svg.SvgAssetLoader(_assetName, assetBundle: bundle, packageName: package, theme: theme);
+      loader = _svg.SvgAssetLoader(
+        _assetName,
+        assetBundle: bundle,
+        packageName: package,
+        theme: theme,
+      );
     }
     return _svg.SvgPicture(
       loader,
@@ -109,7 +268,10 @@ class SvgGenImage {
 }
 
 class LottieGenImage {
-  const LottieGenImage(this._assetName, {this.flavors = const {}});
+  const LottieGenImage(
+    this._assetName, {
+    this.flavors = const {},
+  });
 
   final String _assetName;
   final Set<String> flavors;
@@ -126,7 +288,11 @@ class LottieGenImage {
     _lottie.LottieImageProviderFactory? imageProviderFactory,
     Key? key,
     AssetBundle? bundle,
-    Widget Function(BuildContext, Widget, _lottie.LottieComposition?)? frameBuilder,
+    Widget Function(
+      BuildContext,
+      Widget,
+      _lottie.LottieComposition?,
+    )? frameBuilder,
     ImageErrorWidgetBuilder? errorBuilder,
     double? width,
     double? height,

@@ -18,6 +18,34 @@
 			"presentation": {
 				"close": true
 			}
+		},
+		{
+			"label": "Run ADB Connect Script",
+			"type": "shell",
+			"command": "sh scripts/adb-connect.sh",
+			"args": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"close": true
+			},
+			"options": {
+				"env": {
+					"ADB_TRACE": "none",
+					"ADB_PORT": "${input:port}"
+				}
+			}
+		}
+	],
+	"inputs": [
+		{
+			"id": "port",
+			"type": "promptString",
+			"description": "Enter the ADB port number",
+			"default": "5555"
 		}
 	]
 }

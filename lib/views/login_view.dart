@@ -1,85 +1,107 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ro_flutter/gen/assets.gen.dart';
 import 'package:ro_flutter/gen/colors.gen.dart';
 import 'package:ro_flutter/gen/fonts.gen.dart';
+import 'package:ro_flutter/providers/vallidators.dart';
+import 'package:ro_flutter/widgets/connect_with.dart';
 import 'package:ro_flutter/widgets/drawer_widget.dart';
 import 'package:ro_flutter/widgets/form/form_input_widget.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
   const LoginView({super.key});
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Assets.images.logo.svg(width: 60, height: 60),
+        title: Assets.images.logoSvg.svg(width: 40.r, height: 40.r),
         centerTitle: true,
       ),
       drawer: AppDrawer(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(26),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 100),
-            const Text(
-              'Login',
-              style: TextStyle(
-                fontFamily: Fonts.aBeeZee,
-                fontSize: 26.0,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primary,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 40.h),
+              Text(
+                'Login',
+                style: TextStyle(
+                  fontFamily: Fonts.aBeeZee,
+                  fontSize: 15.w,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  FormInputWidget(
-                    labelText: 'Email',
-                    hintText: 'Enter your email',
-                  ),
-                  const SizedBox(height: 20),
-                  FormInputWidget(
-                    inputType: 'password',
-                    labelText: 'Password',
-                    hintText: 'Enter your password',
-                  ),
-                  const SizedBox(height: 30),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 60,
+              SizedBox(height: 20.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.r),
+                child: Column(
+                  children: [
+                    FormInputWidget(
+                      labelText: 'Email',
+                      hintText: 'Enter your email',
+                      validator: Validator.apply(context, [
+                        RequiredValidation<String>(),
+                        EmailValidation(),
+                      ]),
+                    ),
+                    SizedBox(height: 20.h),
+                    FormInputWidget(
+                      inputType: 'password',
+                      labelText: 'Password',
+                      hintText: 'Enter your password',
+                      validator: Validator.apply(context, [
+                        PasswordValidation(),
+                      ]),
+                    ),
+                    SizedBox(height: 30.h),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        padding: EdgeInsets.symmetric(
+                          vertical: 8.r,
+                          horizontal: 30.r,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                      onPressed: () {
+                        _formKey.currentState!.validate();
+                      },
+                      child: Text(
+                        'Login',
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                    onPressed: () {
-                      // Handle login logic here
-                    },
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    SizedBox(height: 16.h),
+                    Divider(
+                      color: AppColors.secondary,
+                      height: 40.0,
+                      thickness: 1.0,
                     ),
-                  ),
-                  const SizedBox(height: 20.0),
-                  Divider(
-                    color: AppColors.secondary,
-                    height: 40.0,
-                    thickness: 1.0,
-                  ),
-                ],
+                    SizedBox(height: 16.h),
+                    ConnectWith(),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

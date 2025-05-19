@@ -25,9 +25,8 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
-      - "5037:5037" # ADB server
-      - "5555-5585:5555-5585" # Emulator/device ports
-      - "8000-8100:8000-8100" # Flutter development ports
+      - "5037:5037"
+      - "8081:8081"
     working_dir: /workspace
     command: sleep infinity
     user: vscode

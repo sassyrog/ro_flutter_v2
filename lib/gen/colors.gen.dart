@@ -25,6 +25,12 @@ class AppColors {
   /// Color: #eacdc2
   static const Color secondary = Color(0xFFEACDC2);
 
+  /// Color: #121212
+  static const Color spotifyDark = Color(0xFF121212);
+
+  /// Color: #1ED760
+  static const Color spotifyPrimary = Color(0xFF1ED760);
+
   /// Color: #774c60
   static const Color tertiary = Color(0xFF774C60);
 }

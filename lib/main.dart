@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -11,21 +12,25 @@ import 'package:ro_flutter/views/login_view.dart';
 import 'package:ro_flutter/views/splash_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.black, // Match splash background
-    ),
-  );
+  // SystemChrome.setSystemUIOverlayStyle(
+  //   const SystemUiOverlayStyle(
+  //     statusBarColor: Colors.transparent,
+  //     systemNavigationBarColor: Colors.black, // Match splash background
+  //   ),
+  // );
 
   await Future.wait([
     initializeTheme(),
-    AssetPrecacher.precacheAll(),
+    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
     // Add other initializations here if needed
   ]);
+  unawaited(AssetPrecacher.precacheAll());
 
   runApp(const MyApp());
 }
@@ -58,7 +63,7 @@ class AssetPrecacher {
   }
 
   static Future<void> _precacheImages() async {
-    final images = [Assets.images.logoText];
+    final images = [];
 
     await Future.wait(
       images.map((image) async {
@@ -83,32 +88,37 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: isDarkModeNotifier,
-      builder: (context, isDarkModeValue, child) {
-        return MaterialApp(
-          title: KConstants.appName,
-          debugShowCheckedModeBanner: false,
-          theme:
-              isDarkModeValue
-                  ? _buildDarkTheme(context)
-                  : _buildLightTheme(context),
-          darkTheme: _buildDarkTheme(context),
-          themeMode: isDarkModeValue ? ThemeMode.dark : ThemeMode.light,
-          home: const SplashScreen(),
-          initialRoute: '/', // Initial route is splash
-          routes: {
-            '/home': (context) => const HomePage(),
-            '/login': (context) => const LoginView(),
+    // Wrap your MaterialApp with ScreenUtilInit
+    return ScreenUtilInit(
+      designSize: const Size(360, 690), // Use your design dimensions here
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return ValueListenableBuilder(
+          valueListenable: isDarkModeNotifier,
+          builder: (context, isDarkModeValue, child) {
+            return MaterialApp(
+              title: KConstants.appName,
+              debugShowCheckedModeBanner: false,
+              theme:
+                  isDarkModeValue
+                      ? _buildDarkTheme(context)
+                      : _buildLightTheme(context),
+              darkTheme: _buildDarkTheme(context),
+              themeMode: isDarkModeValue ? ThemeMode.dark : ThemeMode.light,
+              home: const SplashScreen(),
+              initialRoute: '/',
+              routes: {
+                '/home': (context) => const HomePage(),
+                '/login': (context) => const LoginView(),
+              },
+            );
           },
         );
       },
+      child: const SplashScreen(), // Optional child widget
     );
   }
-
-  // TextTheme _appTextTheme(BuildContext context) {
-  //   return const GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme);
-  // }
 
   ThemeData _buildLightTheme(BuildContext context) {
     // Light theme colors
@@ -122,11 +132,7 @@ class MyApp extends StatelessWidget {
       useMaterial3: true,
       brightness: Brightness.light,
       fontFamily: 'Poppins',
-      textTheme: Theme.of(context).textTheme.apply(
-        fontSizeFactor: 1.1,
-        fontSizeDelta: 2.0,
-        // bodyColor: tertiaryColor,
-      ),
+      textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.black),
 
       colorScheme: const ColorScheme.light(
         primary: primaryColor,
@@ -167,11 +173,7 @@ class MyApp extends StatelessWidget {
       useMaterial3: true,
       brightness: Brightness.dark,
       fontFamily: 'Poppins',
-      textTheme: Theme.of(context).textTheme.apply(
-        fontSizeFactor: 1.1,
-        fontSizeDelta: 2.0,
-        bodyColor: Colors.white,
-      ),
+      textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.white),
 
       colorScheme: const ColorScheme.dark(
         primary: primaryColor,

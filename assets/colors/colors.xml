@@ -5,5 +5,16 @@
 	<color name="tertiary">#774c60</color>
 	<color name="primary2">#372549</color>
 	<color name="primaryDark">#1a1423</color>
+
+	<!-- Social theme colors -->
+
+	<!-- Spotify -->
+	<color name="spotifyPrimary">#1ED760</color>
+	<color name="spotifyDark">#121212</color>
+
+	<!-- Apple Music -->
+
+	<!-- Google Play Music -->
+
 </resources>
 

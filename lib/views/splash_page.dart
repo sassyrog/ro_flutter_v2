@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ro_flutter/data/constants.dart';
 import 'package:ro_flutter/data/notifiers.dart';
 import 'package:ro_flutter/gen/assets.gen.dart';
@@ -21,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _navigateAfterDelay() async {
     // Minimum splash duration (adjust as needed)
-    await Future.delayed(const Duration(milliseconds: 1500));
+    await Future.delayed(const Duration(milliseconds: 1450));
 
     if (mounted) {
       Navigator.pushReplacementNamed(context, '/login');
@@ -32,33 +33,51 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Pre-cached Lottie will animate smoothly
-            ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                AppColors.primary,
-                BlendMode.srcATop,
-              ),
-              child: Assets.lotties.logoSpin.lottie(
-                width: 175,
-                height: 175,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(height: 10),
-            // Pre-cached SVG
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Assets.images.logoText.svg(
-                width: 175,
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-          ],
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isLandscape = constraints.maxWidth > constraints.maxHeight;
+            Widget logoContent = Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _buildLogoElements(),
+            );
+
+            if (isLandscape) {
+              logoContent = Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: _buildLogoElements(),
+                ),
+              );
+            }
+
+            return logoContent;
+          },
         ),
       ),
     );
+  }
+
+  List<Widget> _buildLogoElements() {
+    return [
+      ColorFiltered(
+        colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcATop),
+        child: Assets.lotties.logoSpin.lottie(
+          width: 120.w,
+          height: 120.h,
+          fit: BoxFit.cover,
+        ),
+      ),
+      SizedBox(width: 10.w, height: 10.h),
+      Padding(
+        padding: EdgeInsets.all(8.0.r),
+        child: Assets.images.logoTextSvg.svg(
+          width: 120.w,
+          fit: BoxFit.fitWidth,
+        ),
+      ),
+    ];
   }
 }

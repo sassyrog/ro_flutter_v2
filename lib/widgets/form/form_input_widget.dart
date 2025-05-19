@@ -8,6 +8,7 @@ class FormInputWidget extends StatelessWidget {
   final String? hintText;
   final dynamic value;
   final void Function(String)? onChanged;
+  final String? Function(String?)? validator;
 
   Map<String, Widget Function(BuildContext, bool)> get _fieldsMap => {
     "text": _buildTextField,
@@ -22,6 +23,7 @@ class FormInputWidget extends StatelessWidget {
     required this.hintText,
     this.value,
     this.onChanged,
+    this.validator,
   });
 
   @override
@@ -71,6 +73,12 @@ class FormInputWidget extends StatelessWidget {
         if (onChanged != null) {
           onChanged!(value);
         }
+      },
+      validator: (value) {
+        if (validator != null) {
+          return validator!(value);
+        }
+        return null;
       },
     );
   }
