@@ -66,3 +66,4 @@ android/app/src/main/res/values-night/styles.xml
 
 
 *.env
+*.bak.*

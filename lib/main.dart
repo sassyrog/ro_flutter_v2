@@ -11,9 +11,13 @@ import 'package:pegaplay/gen/colors.gen.dart';
 import 'package:pegaplay/providers/auth_provider.dart';
 import 'package:pegaplay/services/auth/sportify_auth.dart';
 import 'package:pegaplay/services/deep_link_handler.dart';
-import 'package:pegaplay/views/home_page.dart';
+import 'package:pegaplay/views/auth_view.dart';
+import 'package:pegaplay/views/home_view.dart';
+import 'package:pegaplay/views/landing_view.dart';
 import 'package:pegaplay/views/login_view.dart';
-import 'package:pegaplay/views/splash_page.dart';
+import 'package:pegaplay/views/main_view.dart';
+import 'package:pegaplay/views/onboarding_view.dart';
+import 'package:pegaplay/views/register_view.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -46,9 +50,16 @@ void main() async {
   // Precache assets in the background
   AssetPrecacher.precacheAll();
 
+  // Initialize deep link handler and capture initial link
+  final deepLinkHandler = DeepLinkHandler();
+  final initialLink = await deepLinkHandler.getInitialLink();
+
   // Run the app with the auth provider
   runApp(
-    ChangeNotifierProvider.value(value: authProvider, child: const MyApp()),
+    ChangeNotifierProvider.value(
+      value: authProvider,
+      child: MyApp(deepLinkHandler: deepLinkHandler, initialLink: initialLink),
+    ),
   );
 }
 
@@ -99,30 +110,28 @@ class AssetPrecacher {
   }
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+// Convert to StatelessWidget
+class MyApp extends StatelessWidget {
+  final DeepLinkHandler deepLinkHandler;
+  final Uri? initialLink;
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final DeepLinkHandler _deepLinkHandler = DeepLinkHandler();
-  // This widget is the root of your application.
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _deepLinkHandler.initDeepLinks(context);
-    });
-  }
+  const MyApp({super.key, required this.deepLinkHandler, this.initialLink});
 
   @override
   Widget build(BuildContext context) {
-    // Wrap your MaterialApp with ScreenUtilInit
+    // Initialize deep links after the first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Set up ongoing deep link listener
+      deepLinkHandler.initDeepLinks(context);
+
+      // Handle the initial link if one exists
+      if (initialLink != null) {
+        deepLinkHandler.handleLink(initialLink!, context);
+      }
+    });
+
     return ScreenUtilInit(
-      designSize: const Size(360, 690), // Use your design dimensions here
+      designSize: const Size(360, 690),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
@@ -138,103 +147,102 @@ class _MyAppState extends State<MyApp> {
                       : _buildLightTheme(context),
               darkTheme: _buildDarkTheme(context),
               themeMode: isDarkModeValue ? ThemeMode.dark : ThemeMode.light,
-              initialRoute: '/login',
+              initialRoute: '/',
               routes: {
-                '/': (context) => const SplashScreen(),
-                '/home': (context) => const HomePage(),
-                '/login': (context) => const LoginView(),
+                '/': (context) => const LandingView(),
+                '/home': (context) => const HomeView(),
+                '/home/main': (context) => const MainView(),
+                '/home/onboarding': (context) => const OnboardingView(),
+                '/auth': (context) => const AuthView(),
+                '/auth/login': (context) => const LoginView(),
+                '/auth/register': (context) => const RegisterView(),
               },
             );
           },
         );
       },
-      child: const LoginView(), // Optional child widget
+      child: const LandingView(), // Optional child widget
     );
   }
+}
 
-  ThemeData _buildLightTheme(BuildContext context) {
-    // Light theme colors
-    const primaryColor = AppColors.primary;
-    const secondaryColor = AppColors.secondary;
-    const tertiaryColor = AppColors.tertiary;
-    const surfaceColor = Colors.white;
-    const errorColor = Color(0xFFB00020);
+ThemeData _buildLightTheme(BuildContext context) {
+  // Light theme colors
+  const primaryColor = AppColors.primary;
+  const secondaryColor = AppColors.secondary;
+  const tertiaryColor = AppColors.tertiary;
+  const surfaceColor = Colors.white;
+  const errorColor = Color(0xFFB00020);
 
-    return ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.light,
-      fontFamily: 'Poppins',
-      textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.black),
+  return ThemeData(
+    useMaterial3: true,
+    brightness: Brightness.light,
+    fontFamily: 'Poppins',
+    textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.black),
 
-      colorScheme: const ColorScheme.light(
-        primary: primaryColor,
-        secondary: secondaryColor,
-        tertiary: tertiaryColor,
-        surface: surfaceColor,
-        error: errorColor,
-        onPrimary: Colors.white,
-        onSecondary: tertiaryColor,
-        onSurface: AppColors.primary2,
-        onError: Colors.white,
-      ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: surfaceColor,
-        foregroundColor: AppColors.tertiary,
-      ),
-      drawerTheme: DrawerThemeData(backgroundColor: secondaryColor),
-      cardTheme: const CardTheme(
-        color: surfaceColor,
-        shadowColor: Color(0xFF373e40),
-        elevation: 4,
-      ),
-      floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: primaryColor,
-        foregroundColor: Colors.white,
-      ),
-    );
-  }
+    colorScheme: const ColorScheme.light(
+      primary: primaryColor,
+      secondary: secondaryColor,
+      tertiary: tertiaryColor,
+      surface: surfaceColor,
+      error: errorColor,
+      onPrimary: Colors.white,
+      onSecondary: tertiaryColor,
+      onSurface: AppColors.primary2,
+      onError: Colors.white,
+    ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: surfaceColor,
+      foregroundColor: AppColors.tertiary,
+    ),
+    drawerTheme: DrawerThemeData(backgroundColor: secondaryColor),
+    cardTheme: const CardTheme(
+      color: surfaceColor,
+      shadowColor: Color(0xFF373e40),
+      elevation: 4,
+    ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: primaryColor,
+      foregroundColor: Colors.white,
+    ),
+  );
+}
 
-  ThemeData _buildDarkTheme(BuildContext context) {
-    // Dark theme colors
-    const primaryColor = AppColors.primary;
-    const secondaryColor = AppColors.secondary;
-    const surfaceColor = AppColors.primaryDark;
-    const errorColor = Color(0xFFB00020);
+ThemeData _buildDarkTheme(BuildContext context) {
+  // Dark theme colors
+  const primaryColor = AppColors.primary;
+  const secondaryColor = AppColors.secondary;
+  const surfaceColor = AppColors.primaryDark;
+  const errorColor = Color(0xFFB00020);
 
-    return ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.dark,
-      fontFamily: 'Poppins',
-      textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.white),
+  return ThemeData(
+    useMaterial3: true,
+    brightness: Brightness.dark,
+    fontFamily: 'Poppins',
+    textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.white),
 
-      colorScheme: const ColorScheme.dark(
-        primary: primaryColor,
-        secondary: secondaryColor,
-        surface: surfaceColor,
-        error: errorColor,
-        onPrimary: Colors.white,
-        onSecondary: Colors.black,
-        onSurface: Colors.white,
-        onError: Colors.black,
-      ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: surfaceColor,
-        foregroundColor: Colors.white,
-      ),
-      cardTheme: const CardTheme(
-        color: surfaceColor,
-        shadowColor: Colors.white,
-        elevation: 4,
-      ),
-      floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: secondaryColor,
-        foregroundColor: Colors.black,
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+    colorScheme: const ColorScheme.dark(
+      primary: primaryColor,
+      secondary: secondaryColor,
+      surface: surfaceColor,
+      error: errorColor,
+      onPrimary: Colors.white,
+      onSecondary: Colors.black,
+      onSurface: Colors.white,
+      onError: Colors.black,
+    ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: surfaceColor,
+      foregroundColor: Colors.white,
+    ),
+    cardTheme: const CardTheme(
+      color: surfaceColor,
+      shadowColor: Colors.white,
+      elevation: 4,
+    ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: secondaryColor,
+      foregroundColor: Colors.black,
+    ),
+  );
 }
