@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ro_flutter/data/constants.dart';
-import 'package:ro_flutter/widgets/drawer_widget.dart';
+import 'package:pegaplay/data/constants.dart';
+import 'package:pegaplay/widgets/drawer_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

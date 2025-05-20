@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:ro_flutter/data/constants.dart';
-import 'package:ro_flutter/data/notifiers.dart';
+import 'package:pegaplay/data/constants.dart';
+import 'package:pegaplay/data/notifiers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppDrawer extends StatelessWidget {

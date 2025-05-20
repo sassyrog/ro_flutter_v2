@@ -37,6 +37,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/google_sq_light.svg
   SvgGenImage get googleSqLight => const SvgGenImage('assets/icons/google_sq_light.svg');
 
+  /// File path: assets/icons/menu.svg
+  SvgGenImage get menu => const SvgGenImage('assets/icons/menu.svg');
+
   /// File path: assets/icons/spotify.svg
   SvgGenImage get spotify => const SvgGenImage('assets/icons/spotify.svg');
 
@@ -52,6 +55,7 @@ class $AssetsIconsGen {
         googleLight,
         googleSqDark,
         googleSqLight,
+        menu,
         spotify,
         spotifyFull
       ];

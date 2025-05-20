@@ -3,13 +3,18 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ro_flutter/data/constants.dart';
-import 'package:ro_flutter/data/notifiers.dart';
-import 'package:ro_flutter/gen/assets.gen.dart';
-import 'package:ro_flutter/gen/colors.gen.dart';
-import 'package:ro_flutter/views/home_page.dart';
-import 'package:ro_flutter/views/login_view.dart';
-import 'package:ro_flutter/views/splash_page.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:pegaplay/data/constants.dart';
+import 'package:pegaplay/data/notifiers.dart';
+import 'package:pegaplay/gen/assets.gen.dart';
+import 'package:pegaplay/gen/colors.gen.dart';
+import 'package:pegaplay/providers/auth_provider.dart';
+import 'package:pegaplay/services/auth/sportify_auth.dart';
+import 'package:pegaplay/services/deep_link_handler.dart';
+import 'package:pegaplay/views/home_page.dart';
+import 'package:pegaplay/views/login_view.dart';
+import 'package:pegaplay/views/splash_page.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,22 +22,34 @@ import 'firebase_options.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
+  // Initialize Flutter bindings
   WidgetsFlutterBinding.ensureInitialized();
-  // SystemChrome.setSystemUIOverlayStyle(
-  //   const SystemUiOverlayStyle(
-  //     statusBarColor: Colors.transparent,
-  //     systemNavigationBarColor: Colors.black, // Match splash background
-  //   ),
-  // );
 
+  // Load environment variables
+  await dotenv.load(fileName: "config.env");
+
+  // Setup authorization provider
+  final authProvider = AuthProvider.instance;
+  authProvider.initializeServices({
+    AuthServiceType.spotify: SpotifyAuthService(),
+    // Add other auth services here
+  });
+
+  // Perform parallel initialization of important services
   await Future.wait([
     initializeTheme(),
     Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
+    authProvider.initializeAll(),
     // Add other initializations here if needed
   ]);
-  unawaited(AssetPrecacher.precacheAll());
 
-  runApp(const MyApp());
+  // Precache assets in the background
+  AssetPrecacher.precacheAll();
+
+  // Run the app with the auth provider
+  runApp(
+    ChangeNotifierProvider.value(value: authProvider, child: const MyApp()),
+  );
 }
 
 Future<void> initializeTheme() async {
@@ -82,10 +99,25 @@ class AssetPrecacher {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final DeepLinkHandler _deepLinkHandler = DeepLinkHandler();
   // This widget is the root of your application.
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _deepLinkHandler.initDeepLinks(context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Wrap your MaterialApp with ScreenUtilInit
@@ -106,9 +138,9 @@ class MyApp extends StatelessWidget {
                       : _buildLightTheme(context),
               darkTheme: _buildDarkTheme(context),
               themeMode: isDarkModeValue ? ThemeMode.dark : ThemeMode.light,
-              home: const SplashScreen(),
-              initialRoute: '/',
+              initialRoute: '/login',
               routes: {
+                '/': (context) => const SplashScreen(),
                 '/home': (context) => const HomePage(),
                 '/login': (context) => const LoginView(),
               },
@@ -116,7 +148,7 @@ class MyApp extends StatelessWidget {
           },
         );
       },
-      child: const SplashScreen(), // Optional child widget
+      child: const LoginView(), // Optional child widget
     );
   }
 
@@ -199,5 +231,10 @@ class MyApp extends StatelessWidget {
         foregroundColor: Colors.black,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

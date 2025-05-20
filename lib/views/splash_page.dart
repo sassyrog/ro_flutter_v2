@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ro_flutter/data/constants.dart';
-import 'package:ro_flutter/data/notifiers.dart';
-import 'package:ro_flutter/gen/assets.gen.dart';
-import 'package:ro_flutter/gen/colors.gen.dart';
+import 'package:pegaplay/data/constants.dart';
+import 'package:pegaplay/data/notifiers.dart';
+import 'package:pegaplay/gen/assets.gen.dart';
+import 'package:pegaplay/gen/colors.gen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {

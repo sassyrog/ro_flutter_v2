@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ro_flutter/gen/assets.gen.dart';
-import 'package:ro_flutter/gen/colors.gen.dart';
-import 'package:ro_flutter/gen/fonts.gen.dart';
-import 'package:ro_flutter/providers/vallidators.dart';
-import 'package:ro_flutter/widgets/connect_with.dart';
-import 'package:ro_flutter/widgets/drawer_widget.dart';
-import 'package:ro_flutter/widgets/form/form_input_widget.dart';
+import 'package:pegaplay/gen/assets.gen.dart';
+import 'package:pegaplay/gen/colors.gen.dart';
+import 'package:pegaplay/gen/fonts.gen.dart';
+import 'package:pegaplay/providers/vallidators.dart';
+import 'package:pegaplay/widgets/connect_with.dart';
+import 'package:pegaplay/widgets/drawer_widget.dart';
+import 'package:pegaplay/widgets/form/form_input_widget.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -24,6 +24,13 @@ class _LoginViewState extends State<LoginView> {
       appBar: AppBar(
         title: Assets.images.logoSvg.svg(width: 40.r, height: 40.r),
         centerTitle: true,
+        leading: Builder(
+          builder:
+              (context) => IconButton(
+                icon: Assets.icons.menu.svg(width: 30.w, height: 30.h),
+                onPressed: () => Scaffold.of(context).openDrawer(),
+              ),
+        ),
       ),
       drawer: AppDrawer(),
       body: SingleChildScrollView(
@@ -93,6 +100,17 @@ class _LoginViewState extends State<LoginView> {
                     Divider(
                       color: AppColors.secondary,
                       height: 40.0,
+                      indent: 30.0,
+                      endIndent: 30.0,
+                      thickness: 1.0,
+                    ),
+                    SizedBox(height: 16.h),
+
+                    Divider(
+                      color: AppColors.secondary,
+                      height: 40.0,
+                      indent: 30.0,
+                      endIndent: 30.0,
                       thickness: 1.0,
                     ),
                     SizedBox(height: 16.h),

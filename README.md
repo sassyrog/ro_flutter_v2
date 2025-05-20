@@ -1,4 +1,4 @@
-# ro_flutter
+# pegaplay
 
 A new Flutter project.
 
@@ -24,4 +24,9 @@ dart run flutter_native_splash:create
 ```bash
 dart run flutter_launcher_icons:main
 ```
+
+```bash
+keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
+```
+
 

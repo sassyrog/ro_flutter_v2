@@ -1,4 +1,4 @@
-package com.example.ro_flutter
+package com.pegaplay
 
 import io.flutter.embedding.android.FlutterActivity
 
