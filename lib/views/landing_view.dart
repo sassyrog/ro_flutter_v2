@@ -20,7 +20,9 @@ class _LandingViewState extends State<LandingView> {
     // Use our reusable conditional navigator
     await ConditionalNavigator.navigate(
       context: context,
-      conditionProvider: () => AuthProvider.instance.isAuthenticated,
+      conditionProvider: () async {
+        return AuthProvider.instance.isAuthenticated;
+      },
       successRoute: '/home',
       fallbackRoute: '/auth',
       defaultConditionValue: false,

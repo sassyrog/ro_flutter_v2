@@ -9,7 +9,7 @@ abstract class BaseAuthService {
   Future<void> initialize();
 
   /// Sign in user and return success status
-  Future<bool> signIn();
+  Future<bool> signIn([Map<String, dynamic>? data]);
 
   /// Sign out user
   Future<void> signOut();

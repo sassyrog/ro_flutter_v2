@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 
 class FormInputWidget extends StatelessWidget {
@@ -39,47 +37,54 @@ class FormInputWidget extends StatelessWidget {
     final isEmail = inputType == "email";
     final isPassword = inputType == "password";
 
-    return TextFormField(
-      obscureText: isPassword,
-      keyboardType: () {
-        if (isEmail) {
-          return TextInputType.emailAddress;
-        } else if (inputType == "number") {
-          return TextInputType.number;
-        }
-        return TextInputType.text;
-      }(),
-      style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
-      decoration: InputDecoration(
-        labelText: labelText,
-        hintText: hintText,
-      ).copyWith(
-        // change the color of bottom border
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color:
-                isDarkMode
-                    ? Theme.of(context).colorScheme.secondary
-                    : Theme.of(context).colorScheme.tertiary,
-          ),
+    return SizedBox(
+      height: 50,
+      child: TextFormField(
+        obscureText: isPassword,
+        keyboardType: () {
+          if (isEmail) {
+            return TextInputType.emailAddress;
+          } else if (inputType == "number") {
+            return TextInputType.number;
+          }
+          return TextInputType.text;
+        }(),
+        style: TextStyle(
+          color: isDarkMode ? Colors.white : Colors.black,
+          fontWeight: FontWeight.normal,
         ),
-        fillColor:
-            isDarkMode
-                ? Theme.of(context).colorScheme.secondary.withAlpha(30)
-                : Theme.of(context).colorScheme.secondary.withAlpha(120),
-        filled: true,
+        decoration: InputDecoration(
+          labelText: labelText,
+          hintText: hintText,
+          labelStyle: TextStyle(fontWeight: FontWeight.normal),
+        ).copyWith(
+          // change the color of bottom border
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color:
+                  isDarkMode
+                      ? Theme.of(context).colorScheme.secondary
+                      : Theme.of(context).colorScheme.tertiary,
+            ),
+          ),
+          fillColor:
+              isDarkMode
+                  ? Theme.of(context).colorScheme.secondary.withAlpha(30)
+                  : Theme.of(context).colorScheme.secondary.withAlpha(120),
+          filled: true,
+        ),
+        onChanged: (value) {
+          if (onChanged != null) {
+            onChanged!(value);
+          }
+        },
+        validator: (value) {
+          if (validator != null) {
+            return validator!(value);
+          }
+          return null;
+        },
       ),
-      onChanged: (value) {
-        if (onChanged != null) {
-          onChanged!(value);
-        }
-      },
-      validator: (value) {
-        if (validator != null) {
-          return validator!(value);
-        }
-        return null;
-      },
     );
   }
 }

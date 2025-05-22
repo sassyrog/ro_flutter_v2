@@ -65,7 +65,7 @@ class SpotifyAuthService implements BaseAuthService {
   }
 
   @override
-  Future<bool> signIn() async {
+  Future<bool> signIn([Map<String, dynamic>? data]) async {
     try {
       // Perform the authorization
       final result = await _appAuth.authorizeAndExchangeCode(

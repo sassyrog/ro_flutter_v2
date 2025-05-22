@@ -15,7 +15,6 @@ import 'package:pegaplay/views/auth_view.dart';
 import 'package:pegaplay/views/home_view.dart';
 import 'package:pegaplay/views/landing_view.dart';
 import 'package:pegaplay/views/login_view.dart';
-import 'package:pegaplay/views/main_view.dart';
 import 'package:pegaplay/views/onboarding_view.dart';
 import 'package:pegaplay/views/register_view.dart';
 import 'package:provider/provider.dart';
@@ -66,7 +65,9 @@ void main() async {
 Future<void> initializeTheme() async {
   final prefs = await SharedPreferences.getInstance();
 
-  final hasThemePreference = prefs.containsKey(KConstants.themeModeKey);
+  final hasThemePreference = false;
+  // TODO: reinstate
+  // final hasThemePreference = prefs.containsKey(KConstants.themeModeKey);
 
   if (!hasThemePreference) {
     final brightness = PlatformDispatcher.instance.platformBrightness;
@@ -84,14 +85,22 @@ Future<void> initializeTheme() async {
 class AssetPrecacher {
   static Future<void> precacheAll() async {
     try {
-      await Future.wait([_precacheImages(), _precacheLotties()]);
+      await Future.wait([
+        _precacheImages(),
+        _precacheLotties(),
+        _precacheFonts(),
+      ]);
     } catch (e) {
       debugPrint('Precaching error: $e');
     }
   }
 
   static Future<void> _precacheImages() async {
-    final images = [];
+    final images = [
+      Assets.images.fullLogoSvg,
+      Assets.images.logoSvg,
+      Assets.images.logoTextSvg,
+    ];
 
     await Future.wait(
       images.map((image) async {
@@ -107,6 +116,17 @@ class AssetPrecacher {
   static Future<void> _precacheLotties() async {
     final lotties = [Assets.lotties.logoSpin];
     await Future.wait(lotties.map((lottie) => rootBundle.load(lottie.path)));
+  }
+
+  static Future<void> _precacheFonts() async {
+    final fonts = ['Poppins', 'Roboto', 'ABeeZee'];
+
+    await Future.wait(
+      fonts.map((font) async {
+        final fontLoader = FontLoader(font);
+        await fontLoader.load();
+      }),
+    );
   }
 }
 
@@ -151,7 +171,6 @@ class MyApp extends StatelessWidget {
               routes: {
                 '/': (context) => const LandingView(),
                 '/home': (context) => const HomeView(),
-                '/home/main': (context) => const MainView(),
                 '/home/onboarding': (context) => const OnboardingView(),
                 '/auth': (context) => const AuthView(),
                 '/auth/login': (context) => const LoginView(),
@@ -178,7 +197,11 @@ ThemeData _buildLightTheme(BuildContext context) {
     useMaterial3: true,
     brightness: Brightness.light,
     fontFamily: 'Poppins',
-    textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.black),
+    textTheme: Theme.of(context).textTheme.apply(
+      // bodyColor: Colors.black,
+      fontSizeDelta: 1,
+      fontSizeFactor: 0.8,
+    ),
 
     colorScheme: const ColorScheme.light(
       primary: primaryColor,
@@ -188,7 +211,7 @@ ThemeData _buildLightTheme(BuildContext context) {
       error: errorColor,
       onPrimary: Colors.white,
       onSecondary: tertiaryColor,
-      onSurface: AppColors.primary2,
+      onSurface: AppColors.primaryDark,
       onError: Colors.white,
     ),
     appBarTheme: const AppBarTheme(
@@ -219,7 +242,11 @@ ThemeData _buildDarkTheme(BuildContext context) {
     useMaterial3: true,
     brightness: Brightness.dark,
     fontFamily: 'Poppins',
-    textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.white),
+    textTheme: Theme.of(context).textTheme.apply(
+      bodyColor: Colors.white,
+      fontSizeDelta: 1,
+      fontSizeFactor: 0.8,
+    ),
 
     colorScheme: const ColorScheme.dark(
       primary: primaryColor,

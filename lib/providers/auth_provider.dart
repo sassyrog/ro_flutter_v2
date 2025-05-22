@@ -61,13 +61,16 @@ class AuthProvider extends ChangeNotifier {
   }
 
   // Sign in with a specific service
-  Future<bool> signIn(AuthServiceType type) async {
+  Future<bool> signIn(
+    AuthServiceType type, [
+    Map<String, dynamic>? data,
+  ]) async {
     final service = _authServices[type];
     if (service == null) return false;
 
     try {
       // Store context before starting auth flow
-      final success = await service.signIn();
+      final success = await service.signIn(data);
 
       if (success) {
         _authenticatedServices |= type.value;

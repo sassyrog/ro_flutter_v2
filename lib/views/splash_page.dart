@@ -18,7 +18,6 @@ class SplashScreen extends StatelessWidget {
     final logoWidgets = _buildLogoElements();
 
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Center(
         child:
             isLandscape
